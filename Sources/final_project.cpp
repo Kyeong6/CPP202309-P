@@ -53,29 +53,29 @@ public:
     string getSpecimenName() { return specimenName; }
 };
 
-
-int main() {
-
+int getBioRate() {
     int bioRate;
-
-    // 1. 바이오차 대체율 입력, 값의 범위는 0~6%
     while (true) {
-
         cout << "바이오차 대체율(%)을 입력하시오 : ";
         cin >> bioRate;
-
-        // 잘못된 입력일 경우 문장 출력 후 재질문
         if (bioRate < 0 or bioRate > 6) {
             cout << "잘못된 입력입니다. 바이오차 대체율을 0 ~ 6% 사이의 값으로 입력해주세요." << endl;
             continue;
         }
         break;
     }
+    return bioRate;
+}
+
+
+int main() 
+{
+    // 1. 바이오차 대체율 입력, 값의 범위는 0~6%
+    int bioRate = getBioRate();
 
     // 2. 바이오차 대체율에 따른 실험체명 설정
-    ExperimentData data(bioRate, 1.0, 3.0);
-    cout << "실험체(공시체)명 : " << data.getSpecimenName() << endl;
-    
+    // ExperimentData data(bioRate, 1.0, 3.0);
+    // cout << "실험체(공시체)명 : " << data.getSpecimenName() << endl;
 
     // 다음 단계
     // 3. 바이오차 비율에 따른 시멘트 및 바이오차 값 설정, 다른 재료인 물과 잔골재는 항상 고정값
