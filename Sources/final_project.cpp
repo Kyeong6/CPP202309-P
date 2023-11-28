@@ -86,13 +86,27 @@ void printMaterials(ExperimentData& data) {
 
 // 시간대 별 Flow-Test값 입력, 입력받은 값의 평균값 저장
 void saveFlowTest(ExperimentData& data) {
+    string input;
     double flowTestValues[4];
     // Flow-Test 시간은 고정값
     int times[4] = {10, 20, 30, 40};
 
+    // for (int i = 0; i < 4; i++) {
+    //     cout << times[i] << "분의 Flow-Test 값을 입력하세요 : ";
+    //     cin >> flowTestValues[i];
+    // }
+    cout << "각 시간 별 Flow-Test 값을 공백으로 구분하여 cm 단위로 입력하세요 : ";
+    // 해당 코드 작성하지 않을 경우 위 출력 문장 후 프로그램 종료
+    cin.ignore();
+    // 입력 한 줄로 받기
+    getline(cin, input);
+
+    // 입력 stringstream에 저장
+    stringstream ss(input);
+
+    // stringstream에서 Flow-Test 값 추출
     for (int i = 0; i < 4; i++) {
-        cout << times[i] << "분의 Flow-Test 값을 입력하세요 : ";
-        cin >> flowTestValues[i];
+        ss >> flowTestValues[i];
     }
 
     double sum = 0;
@@ -110,7 +124,8 @@ void saveCompressiveStrength(ExperimentData& data) {
     string input;
     double compressiveStrengthValues[4];
 
-    cout << "10, 20, 30, 40분의 압축강도를 공백으로 구분하여 MPa 단위로 입력하세요 : ";
+    cout << "실험체의 압축강도를 공백으로 구분하여 MPa 단위로 입력하세요 : ";
+    // 해당 코드 작성하지 않을 경우 위 출력 문장 후 프로그램 종료
     cin.ignore();
     // 입력 한 줄로 받기
     getline(cin, input); 
