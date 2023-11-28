@@ -86,6 +86,7 @@ void printMaterials(ExperimentData& data) {
 // 시간대 별 Flow-Test값 입력, 입력받은 값의 평균값 저장
 void saveFlowTest(ExperimentData& data) {
     double flowTestValues[4];
+    // Flow-Test 시간은 고정값
     int times[4] = {10, 20, 30, 40};
 
     for (int i = 0; i < 4; i++) {
@@ -103,6 +104,26 @@ void saveFlowTest(ExperimentData& data) {
     data.setFlowTestValue(average);
 }
 
+// 실험체의 압축강도 출력, 입력받은 값의 평균값 저장
+void saveCompressiveStrength(ExperimentData& data) {
+    double compressiveStrengthValues[4];
+
+    for (int i = 0; i < 4; i++) {
+        cout << "압축강도 실험체" << i+1 << "의 값을 MPa 단위로 입력하세요 : ";
+        cin >> compressiveStrengthValues[i];
+    }
+
+    double sum = 0;
+    for (int i = 0; i < 4; i++) {
+        sum += compressiveStrengthValues[i];
+    }
+
+    double average = sum / 4;
+    // setCompressiveStrength() 함수 호출하여 평균값 설정
+    data.setCompressiveStrength(average);
+}
+
+
 int main() 
 {
     // 1. 바이오차 대체율 입력, 값의 범위는 0~6%
@@ -119,6 +140,9 @@ int main()
     saveFlowTest(data);
 
     // 5. 실험체의 압축강도 입력(실험체명 당 4개 존재) 후 평균값 저장
+    saveCompressiveStrength(data);
+
+
     // 6. 표를 통해 데이터들을 한 눈에 출력 및 플로우 테스트와 압축강도의 평균값을 통해 적합성 여부 판별
 
     return 0;
