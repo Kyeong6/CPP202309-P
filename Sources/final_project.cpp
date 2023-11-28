@@ -32,7 +32,8 @@ public:
     void setSuitability(string value) { suitability = value; }
     void setCement() {
         // Cement는 bioRate 비율에 따라 값이 줄어듬
-        cement = 1.0 - bioRate;
+        // 현재는 프로젝트를 진행 중이므로 시멘트의 기본값 1000(g)으로 설정
+        cement = 1000 * (1.0 - bioRate);
     }
     // 실험체(공시체)명 설정
     void setSpecimenName() {
@@ -44,6 +45,7 @@ public:
 
     // getter : 멤버 변수 값 반환
     double getBioRate() { return bioRate; }
+    double getBioAsh() { return 1000 * bioRate; }
     double getWater() { return water; }
     double getCement() { return cement; }
     double getFineAggregate() { return fineAggregate; }
@@ -73,17 +75,29 @@ void printSpecimenName(ExperimentData& data) {
     cout << "실험체(공시체)명 : " << data.getSpecimenName() << endl;
 }
 
+// 바이오차 비율에 따른 시멘트량 및 재료량 출력
+void printMaterials(ExperimentData& data) {
+    cout << "바이오차 양 : " << data.getBioAsh() << "g" << endl;
+    cout << "시멘트 양 : " << data.getCement() << "g" << endl;
+    cout << "물 양 : " << data.getWater() << "g" << endl;
+    cout << "잔골재 양 : " << data.getFineAggregate() << "g" << endl;
+}
+
 
 int main() 
 {
     // 1. 바이오차 대체율 입력, 값의 범위는 0~6%
     int bioRate = getBioRate();
+    
     // 2. 바이오차 대체율에 따른 실험체명 설정
     ExperimentData data(bioRate, 1.0, 3.0);
     printSpecimenName(data);
+    
+    // 3. 바이오차 비율에 따른 재료량 출력
+    printMaterials(data);
+
 
     // 다음 단계
-    // 3. 바이오차 비율에 따른 시멘트 및 바이오차 값 설정, 다른 재료인 물과 잔골재는 항상 고정값
     // 4. 시간대 별(10,20,30,40min) Flowtest 입력 요청 문장 출력, 입력받은 값의 평균값 저장
     // 5. 실험체의 압축강도 입력(실험체명 당 4개 존재) 후 평균값 저장
     // 6. 표를 통해 데이터들을 한 눈에 출력 및 플로우 테스트와 압축강도의 평균값을 통해 적합성 여부 판별
