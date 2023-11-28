@@ -111,6 +111,7 @@ void saveCompressiveStrength(ExperimentData& data) {
     double compressiveStrengthValues[4];
 
     cout << "10, 20, 30, 40분의 압축강도를 공백으로 구분하여 MPa 단위로 입력하세요 : ";
+    cin.ignore();
     // 입력 한 줄로 받기
     getline(cin, input); 
 
