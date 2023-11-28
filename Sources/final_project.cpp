@@ -92,6 +92,15 @@ void saveFlowTest(ExperimentData& data) {
         cout << times[i] << "분의 Flow-Test 값을 입력하세요 : ";
         cin >> flowTestValues[i];
     }
+
+    double sum = 0;
+    for (int i = 0; i < 4; i++) {
+        sum += flowTestValues[i];
+    }
+
+    double average = sum / 4;
+    // setFlowTestValue() 함수 호출하여 평균값 설정
+    data.setFlowTestValue(average);
 }
 
 int main() 
@@ -105,10 +114,10 @@ int main()
     
     // 3. 바이오차 비율에 따른 재료량 출력
     printMaterials(data);
-
-
-    // 다음 단계
+    
     // 4. 시간대 별(10,20,30,40min) Flowtest 입력 요청 문장 출력, 입력받은 값의 평균값 저장
+    saveFlowTest(data);
+
     // 5. 실험체의 압축강도 입력(실험체명 당 4개 존재) 후 평균값 저장
     // 6. 표를 통해 데이터들을 한 눈에 출력 및 플로우 테스트와 압축강도의 평균값을 통해 적합성 여부 판별
 
