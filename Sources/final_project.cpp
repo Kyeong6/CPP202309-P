@@ -83,13 +83,23 @@ void printMaterials(ExperimentData& data) {
     cout << "잔골재 양 : " << data.getFineAggregate() << "g" << endl;
 }
 
+// 시간대 별 Flow-Test값 입력, 입력받은 값의 평균값 저장
+void saveFlowTest(ExperimentData& data) {
+    double flowTestValues[4];
+    int times[4] = {10, 20, 30, 40};
+
+    for (int i = 0; i < 4; i++) {
+        cout << times[i] << "분의 Flow-Test 값을 입력하세요 : ";
+        cin >> flowTestValues[i];
+    }
+}
 
 int main() 
 {
     // 1. 바이오차 대체율 입력, 값의 범위는 0~6%
     int bioRate = getBioRate();
     
-    // 2. 바이오차 대체율에 따른 실험체명 설정
+    // 2. 바이오차 대체율에 따른 실험체명 설정, 물과 잔골재 양 설정(고정값)
     ExperimentData data(bioRate, 1.0, 3.0);
     printSpecimenName(data);
     
