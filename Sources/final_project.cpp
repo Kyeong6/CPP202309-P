@@ -45,7 +45,7 @@ public:
     }
 
     // getter : 멤버 변수 값 반환
-    double getBioRate() { return bioRate; }
+    double getBioRate() { return 100 * bioRate; }
     double getBioAsh() { return 1000 * bioRate; }
     double getWater() { return water; }
     double getCement() { return cement; }
