@@ -148,6 +148,26 @@ void saveCompressiveStrength(ExperimentData& data) {
     data.setCompressiveStrength(average);
 }
 
+void printExperimentData(ExperimentData& data) {
+    // 컬럼명 출력
+    cout << "실험체명           바이오차 대체율  시멘트 양     물 양      잔골재 양     플로우 테스트 평균값  압축강도 평균값\n";
+
+    // 구분선 출력
+    for (int i = 0; i < 112; i++) cout << '-';
+    cout << '\n';
+
+    // 실험 데이터 출력
+    cout << data.getSpecimenName() << string(25 - data.getSpecimenName().length(), ' ') // 실험체명
+         << data.getBioRate() << string(20 - to_string(data.getBioRate()).length(), ' ') // 바이오차 대체율
+         << data.getCement() << string(21 - to_string(data.getCement()).length(), ' ') // 시멘트 양
+         << data.getWater() << string(20 - to_string(data.getWater()).length(), ' ') // 물 양
+         << data.getFineAggregate() << string(26 - to_string(data.getFineAggregate()).length(), ' ') // 잔골재 양
+         << data.getFlowTestValue() << string(25 - to_string(data.getFlowTestValue()).length(), ' ') // 플로우 테스트 평균값
+         << data.getCompressiveStrength() << string(20 - to_string(data.getCompressiveStrength()).length(), ' ') << '\n'; // 압축강도 평균값
+        //  << data.getSuitability() << '\n'; // 적합성 판별
+}
+
+
 
 int main() 
 {
@@ -167,8 +187,10 @@ int main()
     // 5. 실험체의 압축강도 입력(실험체명 당 4개 존재) 후 평균값 저장
     saveCompressiveStrength(data);
 
+    // 6. 플로우 테스트와 압축강도의 평균값을 통한 적합성 판별
+    printExperimentData(data);
 
-    // 6. 표를 통해 데이터들을 한 눈에 출력 및 플로우 테스트와 압축강도의 평균값을 통해 적합성 여부 판별
+    // 7. 표를 통해 데이터들을 한 눈에 출력 
 
     return 0;
 
