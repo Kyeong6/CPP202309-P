@@ -188,9 +188,10 @@ int main()
     saveCompressiveStrength(data);
 
     // 6. 플로우 테스트와 압축강도의 평균값을 통한 적합성 판별
-    printExperimentData(data);
+    
 
     // 7. 표를 통해 데이터들을 한 눈에 출력 
+    printExperimentData(data);
 
     return 0;
 
