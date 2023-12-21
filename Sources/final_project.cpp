@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <iomanip> 
 #include <sstream>
 using namespace std;
 
@@ -122,9 +123,9 @@ void saveFlowTest(ExperimentData& data) {
 // 실험체의 압축강도 출력, 입력받은 값의 평균값 저장
 void saveCompressiveStrength(ExperimentData& data) {
     string input;
-    double compressiveStrengthValues[4];
+    double compressiveStrengthValues[3];
 
-    cout << "실험체의 압축강도를 공백으로 구분하여 MPa 단위로 입력하세요 : ";
+    cout << "실험체의 압축강도를 공백으로 구분하여 KN 단위로 입력하세요 : ";
     // 해당 코드 작성하지 않을 경우 위 출력 문장 후 프로그램 종료
     cin.ignore();
     // 입력 한 줄로 받기
@@ -134,16 +135,16 @@ void saveCompressiveStrength(ExperimentData& data) {
     stringstream ss(input); 
 
     // stringstream에서 압축강도 값 추출
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
         ss >> compressiveStrengthValues[i];
     }
 
     double sum = 0;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
         sum += compressiveStrengthValues[i];
     }
 
-    double average = sum / 4;
+    double average = sum / 3;
     // setCompressiveStrength() 함수 호출하여 평균값 설정
     data.setCompressiveStrength(average);
 }
@@ -166,6 +167,7 @@ void printExperimentData(ExperimentData& data) {
          << data.getCompressiveStrength() << string(20 - to_string(data.getCompressiveStrength()).length(), ' ') << '\n'; // 압축강도 평균값
         //  << data.getSuitability() << '\n'; // 적합성 판별
 }
+
 
 
 
