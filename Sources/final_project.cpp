@@ -218,8 +218,9 @@ int main()
     // 4. 시간대 별(10,20,30,40min) Flowtest 입력 요청 문장 출력, 입력받은 값의 평균값 저장
     saveFlowTest(data);
 
-    // 5. 실험체의 압축강도 입력(실험체명 당 4개 존재) 후 평균값 저장
+    // 5. 실험체의 압축강도, 쪼갬강도 입력(실험체명 당 3개 존재) 후 평균값 저장
     saveCompressiveStrength(data);
+    saveTensileStrength(data);
 
     // 6. 플로우 테스트와 압축강도의 평균값을 통한 적합성 판별
     
