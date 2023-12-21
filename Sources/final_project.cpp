@@ -15,7 +15,8 @@ private:
     double flowTestValue; // 플로우 테스트 값
     double compressiveStrength; // 압축강도
     string suitability; // 적합성 판별
-    double tensileStrength; // 인장 강도
+    double tensileStrength; // 쪼갬강도 강도
+    double flexuralStrength; // 휨 강도
 
 public:
     // 클래스 생성자 설정
@@ -33,6 +34,7 @@ public:
     void setFlowTestValue(double value) { flowTestValue = value; }
     void setCompressiveStrength(double value) { compressiveStrength = value; }
     void setTensileStrength(double value) { tensileStrength = value; }
+    void setFlexuralStrength(double value) { flexuralStrength = value; }
     void setSuitability(string value) { suitability = value; }
     void setCement() {
         // Cement는 bioRate 비율에 따라 값이 줄어듬
@@ -56,6 +58,7 @@ public:
     double getFlowTestValue() { return flowTestValue; }
     double getCompressiveStrength() { return compressiveStrength; }
     double getTensileStrength() { return tensileStrength; }
+    double getFlexuralStrength() { return flexuralStrength; }
     string getSuitability() { return suitability; }
     string getSpecimenName() { return specimenName; }
 };
@@ -181,6 +184,35 @@ void saveTensileStrength(ExperimentData& data) {
     data.setTensileStrength(average);
 }
 
+// 실험체의 휨강도 입력, 입력받은 값의 평균값 저장
+void saveFlexuralStrength(ExperimentData& data) {
+    string input;
+    double flexuralStrengthValues[3];
+
+    cout << "실험체의 휨강도를 공백으로 구분하여 KN 단위로 입력하세요 : ";
+    // 해당 코드 작성하지 않을 경우 위 출력 문장 후 프로그램 종료
+    cin.ignore();
+    // 입력 한 줄로 받기
+    getline(cin, input); 
+
+    // 입력 stringstream에 저장
+    stringstream ss(input); 
+
+    // stringstream에서 휨강도 값 추출
+    for (int i = 0; i < 3; i++) {
+        ss >> flexuralStrengthValues[i];
+    }
+
+    double sum = 0;
+    for (int i = 0; i < 3; i++) {
+        sum += flexuralStrengthValues[i];
+    }
+
+    double average = sum / 3;
+    // setFlexuralStrenth() 함수 호출하여 평균값 설정
+    data.setFlexuralStrength(average);
+}
+
 void printExperimentData(ExperimentData& data) {
     // 컬럼명 출력
     cout << "실험체명           바이오차 대체율  시멘트 양     물 양      잔골재 양     플로우 테스트 평균값  압축강도 평균값\n";
@@ -221,6 +253,7 @@ int main()
     // 5. 실험체의 압축강도, 쪼갬강도 입력(실험체명 당 3개 존재) 후 평균값 저장
     saveCompressiveStrength(data);
     saveTensileStrength(data);
+    saveFlexuralStrength(data);
 
     // 6. 플로우 테스트와 압축강도의 평균값을 통한 적합성 판별
     
