@@ -15,6 +15,7 @@ private:
     double flowTestValue; // 플로우 테스트 값
     double compressiveStrength; // 압축강도
     string suitability; // 적합성 판별
+    double tensileStrength; // 인장 강도
 
 public:
     // 클래스 생성자 설정
@@ -31,6 +32,7 @@ public:
     // setter : 멤버 변수 값 설정
     void setFlowTestValue(double value) { flowTestValue = value; }
     void setCompressiveStrength(double value) { compressiveStrength = value; }
+    void setTensileStrength(double value) { tensileStrength = value; }
     void setSuitability(string value) { suitability = value; }
     void setCement() {
         // Cement는 bioRate 비율에 따라 값이 줄어듬
@@ -53,6 +55,7 @@ public:
     double getFineAggregate() { return fineAggregate; }
     double getFlowTestValue() { return flowTestValue; }
     double getCompressiveStrength() { return compressiveStrength; }
+    double getTensileStrength() { return tensileStrength; }
     string getSuitability() { return suitability; }
     string getSpecimenName() { return specimenName; }
 };
@@ -120,7 +123,7 @@ void saveFlowTest(ExperimentData& data) {
     data.setFlowTestValue(average);
 }
 
-// 실험체의 압축강도 출력, 입력받은 값의 평균값 저장
+// 실험체의 압축강도 입력, 입력받은 값의 평균값 저장
 void saveCompressiveStrength(ExperimentData& data) {
     string input;
     double compressiveStrengthValues[3];
@@ -147,6 +150,35 @@ void saveCompressiveStrength(ExperimentData& data) {
     double average = sum / 3;
     // setCompressiveStrength() 함수 호출하여 평균값 설정
     data.setCompressiveStrength(average);
+}
+
+// 실험체의 쪼갬강도 입력, 입력받은 값의 평균값 저장
+void saveTensileStrength(ExperimentData& data) {
+    string input;
+    double tensileStrengthValues[3];
+
+    cout << "실험체의 쪼갬강도를 공백으로 구분하여 KN 단위로 입력하세요 : ";
+    // 해당 코드 작성하지 않을 경우 위 출력 문장 후 프로그램 종료
+    cin.ignore();
+    // 입력 한 줄로 받기
+    getline(cin, input); 
+
+    // 입력 stringstream에 저장
+    stringstream ss(input); 
+
+    // stringstream에서 쪼갬강도 값 추출
+    for (int i = 0; i < 3; i++) {
+        ss >> tensileStrengthValues[i];
+    }
+
+    double sum = 0;
+    for (int i = 0; i < 3; i++) {
+        sum += tensileStrengthValues[i];
+    }
+
+    double average = sum / 3;
+    // setTensileStrenth() 함수 호출하여 평균값 설정
+    data.setTensileStrength(average);
 }
 
 void printExperimentData(ExperimentData& data) {
