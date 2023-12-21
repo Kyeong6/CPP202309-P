@@ -17,6 +17,9 @@ private:
     string suitability; // 적합성 판별
     double tensileStrength; // 쪼갬인장강도
     double flexuralStrength; // 휨강도
+    bool isCompressiveSuitable; // 압축강도 적합성
+    bool isTensileSuitable; // 쪼갬인장강도 적합성
+    bool isFlexuralSuitable; // 휨강도 적합성
 
 public:
     // 클래스 생성자 설정
@@ -49,6 +52,18 @@ public:
         bioRate = static_cast<double>(rate) / 100;
     }
 
+    void setCompressiveSuitability(bool suitable) {
+        isCompressiveSuitable = suitable;
+    }
+
+    void setTensileSuitability(bool suitable) {
+        isTensileSuitable = suitable;
+    }
+
+    void setFlexuralSuitability(bool suitable) {
+        isFlexuralSuitable = suitable;
+    }
+
     // getter : 멤버 변수 값 반환
     double getBioRate() { return 100 * bioRate; }
     double getBioAsh() { return 1000 * bioRate; }
@@ -61,6 +76,11 @@ public:
     double getFlexuralStrength() { return flexuralStrength; }
     string getSuitability() { return suitability; }
     string getSpecimenName() { return specimenName; }
+    bool getCompressiveSuitability() const { return isCompressiveSuitable; }
+
+    bool getTensileSuitability() const { return isTensileSuitable; }
+
+    bool getFlexuralSuitability() const { return isFlexuralSuitable; }
 };
 
 // 바이오차 대체율 유효성 판별 함수
@@ -199,15 +219,20 @@ void checkStrengthSuitability(ExperimentData& data) {
     bool isCompressiveSuitable = (compressiveStrength >= standardCompressiveStrength);
     bool isTensileSuitable = (tensileStrength >= standardTensileStrength);
     bool isFlexuralSuitable = (flexuralStrength >= standardFlexuralStrength);
+
+    // 적합 여부를 ExperimentData 클래스에 저장
+    data.setCompressiveSuitability(isCompressiveSuitable);
+    data.setTensileSuitability(isTensileSuitable);
+    data.setFlexuralSuitability(isFlexuralSuitable);
 }
 
 // 최종 표 출력
 void printExperimentData(ExperimentData& data) {
     // 컬럼명 출력
-    cout << "실험체명           바이오차 대체율  시멘트 양     물 양      잔골재 양     플로우 테스트 평균값  압축강도 평균값\n";
+    cout << "실험체명           바이오차 대체율  시멘트 양     물 양      잔골재 양     플로우 테스트 평균값    압축강도 적합성   쪼갬인장강도 적합성    휨강도 적합성\n";
 
     // 구분선 출력
-    for (int i = 0; i < 112; i++) cout << '-';
+    for (int i = 0; i < 155; i++) cout << '-';
     cout << '\n';
 
     // 실험 데이터 출력
@@ -217,7 +242,9 @@ void printExperimentData(ExperimentData& data) {
          << data.getWater() << string(20 - to_string(data.getWater()).length(), ' ') // 물 양
          << data.getFineAggregate() << string(26 - to_string(data.getFineAggregate()).length(), ' ') // 잔골재 양
          << data.getFlowTestValue() << string(25 - to_string(data.getFlowTestValue()).length(), ' ') // 플로우 테스트 평균값
-         << data.getCompressiveStrength() << string(20 - to_string(data.getCompressiveStrength()).length(), ' ') << '\n'; // 압축강도 평균값
+         << (data.getCompressiveSuitability() ? "적합" : "부적합") << string(15, ' ') // 압축강도 적합성
+         << (data.getTensileSuitability() ? "적합" : "부적합") << string(15, ' ') // 쪼갬인장강도 적합성
+         << (data.getFlexuralSuitability() ? "적합" : "부적합") << '\n'; // 압축강도 적합성
 }
 
 
