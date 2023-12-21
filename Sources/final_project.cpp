@@ -94,37 +94,45 @@ void printMaterials(ExperimentData& data) {
 // 시간대 별 Flow-Test값 입력, 입력받은 값의 평균값 저장
 void saveFlowTest(ExperimentData& data) {
     string input;
-    double flowTestValues[4];
-    // Flow-Test 시간은 고정값
-    int times[4] = {10, 20, 30, 40};
+    double flowTestValues[5];
+    // Flow-Test 시간은 고정값, 0은 직후 Flow-test 값
+    int times[5] = {0, 10, 20, 30, 40};
 
-    // for (int i = 0; i < 4; i++) {
-    //     cout << times[i] << "분의 Flow-Test 값을 입력하세요 : ";
-    //     cin >> flowTestValues[i];
-    // }
-    cout << "각 시간 별 Flow-Test 값을 공백으로 구분하여 cm 단위로 입력하세요 : ";
-    // 해당 코드 작성하지 않을 경우 위 출력 문장 후 프로그램 종료
-    cin.ignore();
-    // 입력 한 줄로 받기
-    getline(cin, input);
+    // 유효성 검사를 위한 while문
+    while (true) {
+        cout << "각 시간 별(초기값은 직후) Flow-Test 값을 공백으로 구분하여 mm 단위로 입력하세요 : ";
+        cin.ignore();
+        // 입력 한 줄로 받기
+        getline(cin, input);
 
-    // 입력 stringstream에 저장
-    stringstream ss(input);
+        // 입력 stringstream에 저장
+        stringstream ss(input);
 
-    // stringstream에서 Flow-Test 값 추출
-    for (int i = 0; i < 4; i++) {
-        ss >> flowTestValues[i];
+        // validInput 변수를 통한 유효성 검사
+        // 시간 대 별 5개의 입력을 작성하지 않았을 경우
+        bool validInput = true;
+        for (int i = 0; i < 5; i++) {
+            if (!(ss >> flowTestValues[i])) {
+                validInput = false;
+                cout << "유효하지 않은 입력입니다. 숫자를 공백으로 구분하여 5개 입력하세요." << endl;
+                break;
+            }
+        }
+        
+        if (validInput) {
+            break;
+        }
     }
 
     double sum = 0;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         sum += flowTestValues[i];
     }
 
-    double average = sum / 4;
-    // setFlowTestValue() 함수 호출하여 평균값 설정
+    double average = sum / 5;
     data.setFlowTestValue(average);
 }
+
 
 
 // 실험체의 압축강도 입력, 입력받은 값의 평균값 저장
