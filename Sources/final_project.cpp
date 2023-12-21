@@ -127,22 +127,62 @@ void saveFlowTest(ExperimentData& data) {
 }
 
 // 실험체의 압축강도 입력, 입력받은 값의 평균값 저장
+// void saveCompressiveStrength(ExperimentData& data) {
+//     string input;
+//     double compressiveStrengthValues[3];
+
+//     cout << "실험체의 압축강도를 공백으로 구분하여 KN 단위로 입력하세요 : ";
+//     // 해당 코드 작성하지 않을 경우 위 출력 문장 후 프로그램 종료
+//     cin.ignore();
+//     // 입력 한 줄로 받기
+//     getline(cin, input); 
+
+//     // 입력 stringstream에 저장
+//     stringstream ss(input); 
+
+//     // stringstream에서 압축강도 값 추출
+//     for (int i = 0; i < 3; i++) {
+//         ss >> compressiveStrengthValues[i];
+//     }
+
+//     double sum = 0;
+//     for (int i = 0; i < 3; i++) {
+//         sum += compressiveStrengthValues[i];
+//     }
+
+//     double average = sum / 3;
+//     // setCompressiveStrength() 함수 호출하여 평균값 설정
+//     data.setCompressiveStrength(average);
+// }
+
+// 실험체의 압축강도 입력, 입력받은 값의 평균값 저장
 void saveCompressiveStrength(ExperimentData& data) {
     string input;
     double compressiveStrengthValues[3];
 
-    cout << "실험체의 압축강도를 공백으로 구분하여 KN 단위로 입력하세요 : ";
-    // 해당 코드 작성하지 않을 경우 위 출력 문장 후 프로그램 종료
-    cin.ignore();
-    // 입력 한 줄로 받기
-    getline(cin, input); 
+    // 유효성 검사를 위한 while문 설정
+    while (true) {
+        cout << "실험체의 압축강도를 공백으로 구분하여 KN 단위(실수)로 입력하세요 : ";
+        cin.ignore();
+        // 입력 한 줄로 받기
+        getline(cin, input);
 
-    // 입력 stringstream에 저장
-    stringstream ss(input); 
+        // 입력 stringstream에 저장
+        stringstream ss(input);
 
-    // stringstream에서 압축강도 값 추출
-    for (int i = 0; i < 3; i++) {
-        ss >> compressiveStrengthValues[i];
+        // validInput 변수를 통한 유효성 검사 실행
+        bool validInput = true;
+        for (int i = 0; i < 3; i++) {
+            if (!(ss >> compressiveStrengthValues[i])) {
+                validInput = false;
+                cout << "유효하지 않은 입력입니다. 숫자(실수)를 공백으로 구분하여 입력하세요." << endl;
+                break;
+            }
+        }
+
+        if (validInput) {
+            break;
+        }
     }
 
     double sum = 0;
@@ -154,6 +194,7 @@ void saveCompressiveStrength(ExperimentData& data) {
     // setCompressiveStrength() 함수 호출하여 평균값 설정
     data.setCompressiveStrength(average);
 }
+
 
 // 실험체의 쪼갬강도 입력, 입력받은 값의 평균값 저장
 void saveTensileStrength(ExperimentData& data) {
