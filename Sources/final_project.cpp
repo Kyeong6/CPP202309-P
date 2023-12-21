@@ -22,14 +22,33 @@ private:
     bool isFlexuralSuitable; // 휨강도 적합성
 
 public:
+
+    void calculateCement() {
+        double bioAsh = bioRate * 48.5; // 바이오차 1%당 바이오차 양(g)
+        
+        // 바이오차에 따른 시멘트 양 계산
+        if (bioRate == 0.01) {
+            cement = 4.80 - bioAsh / 1000.0;
+        } else if (bioRate == 0.02) {
+            cement = 4.75 - bioAsh / 1000.0;
+        } else if (bioRate == 0.03) {
+            cement = 4.71 - bioAsh / 1000.0;
+        } else if (bioRate == 0.04) {
+            cement = 4.66 - bioAsh / 1000.0;
+        } else if (bioRate == 0.05) {
+            cement = 4.56 - bioAsh / 1000.0;
+        } else if (bioRate == 0.06) {
+            cement = 4.56 - bioAsh / 1000.0;
+        }
+    }
     // 클래스 생성자 설정
     // bioRate는 0~6% 범위의 값이므로 정수로 설정
     ExperimentData(int bioRate, double water, double fineAggregate) 
     // 멤버 초기화 리스트
     : bioRate(bioRate), water(water), fineAggregate(fineAggregate) 
     {
-        setBioRate(bioRate);
-        setCement();
+        setBioRate(static_cast<double>(bioRate) / 100);
+        calculateCement(); // 시멘트 양을 새롭게 계산
         setSpecimenName();
     }
 
@@ -47,8 +66,8 @@ public:
     void setSpecimenName() {
         specimenName = "WB-C-" + to_string(static_cast<int>(bioRate * 100));
     }
-    void setBioRate(int rate) {
-        bioRate = static_cast<double>(rate) / 100;
+    void setBioRate(double rate) {
+        bioRate = rate;
     }
 
     void setCompressiveSuitability(bool suitable) {
@@ -65,7 +84,7 @@ public:
 
     // getter : 멤버 변수 값 반환
     double getBioRate() { return 100 * bioRate; }
-    double getBioAsh() { return 1000 * bioRate; }
+    double getBioAsh() { return bioRate * 48.5; }
     double getWater() { return water; }
     double getCement() { return cement; }
     double getFineAggregate() { return fineAggregate; }
@@ -105,13 +124,14 @@ void printSpecimenName(ExperimentData& data) {
 // 바이오차 비율에 따른 시멘트량 및 재료량 출력
 void printMaterials(ExperimentData& data) {
     double bioAsh = data.getBioAsh();
-    double cement = 1000 - bioAsh;
+    double cement = data.getCement(); // 시멘트 양을 그대로 가져옴
 
     cout << "바이오차 양 : " << bioAsh << "g" << endl;
-    cout << "시멘트 양 : " << cement / 1000 << "kg" << endl; // g를 kg로 변환
+    cout << "시멘트 양 : " << fixed << setprecision(2) << cement << "kg" << endl; // 시멘트 양 반올림하여 출력
     cout << "물 양 : 2.29Kg" << endl; // 고정값
     cout << "잔골재 양 : 11.04kg" << endl; // 고정값
 }
+
 
 // 시간대 별 Flow-Test값 입력, 입력받은 값의 평균값 저장
 void saveFlowTest(ExperimentData& data) {
@@ -231,24 +251,8 @@ void checkStrengthSuitability(ExperimentData& data) {
 
 // 최종 표 출력
 void printExperimentData(ExperimentData& data) {
+
     // 컬럼명 출력
-    // cout << "실험체명           바이오차 대체율(%)  시멘트 양(kg)     물 양(kg)      잔골재 양(kg)     플로우 테스트 평균값(mm)    압축강도 적합성   쪼갬인장강도 적합성    휨강도 적합성\n";
-
-    // // 구분선 출력
-    // for (int i = 0; i < 175; i++) cout << '-';
-    // cout << '\n';
-
-    // // 실험 데이터 출력
-    // cout << data.getSpecimenName() << string(25 - data.getSpecimenName().length(), ' ') // 실험체명
-    //      << data.getBioRate() << string(20 - to_string(data.getBioRate()).length(), ' ') // 바이오차 대체율
-    //      << data.getCement() << string(22 - to_string(data.getCement()).length(), ' ') // 시멘트 양
-    //      << data.getWater() << string(20 - to_string(data.getWater()).length(), ' ') // 물 양
-    //      << data.getFineAggregate() << string(26 - to_string(data.getFineAggregate()).length(), ' ') // 잔골재 양
-    //      << data.getFlowTestValue() << string(25 - to_string(data.getFlowTestValue()).length(), ' ') // 플로우 테스트 평균값
-    //      << (data.getCompressiveSuitability() ? "적합" : "부적합") << string(18, ' ') // 압축강도 적합성
-    //      << (data.getTensileSuitability() ? "적합" : "부적합") << string(18, ' ') // 쪼갬인장강도 적합성
-    //      << (data.getFlexuralSuitability() ? "적합" : "부적합") << '\n'; // 압축강도 적합성
-
     cout << left << setw(18) << "실험체명"
      << left << setw(33) << "바이오차 대체율(%)"
      << left << setw(23) << "시멘트 양(kg)"
@@ -258,13 +262,15 @@ void printExperimentData(ExperimentData& data) {
      << left << setw(17) << "압축강도"
      << left << setw(23) << "쪼갬인장강도"
      << left << setw(18) << "휨강도" << endl;
-
+    
+    // 구분선 출력
     for (int i = 0; i < 150; i++) cout << '-';
     cout << '\n';
 
+    // 값 출력
     cout << left << setw(21) << data.getSpecimenName()
-         << left << setw(21) << data.getBioRate()
-         << left << setw(19) << data.getCement()
+         << left << setw(22) << static_cast<int>(data.getBioRate())
+         << left << setw(18) << data.getCement()
          << left << setw(16) << data.getWater()
          << left << setw(21) << data.getFineAggregate()
          << left << setw(14) << data.getFlowTestValue()
