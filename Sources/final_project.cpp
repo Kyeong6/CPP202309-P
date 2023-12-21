@@ -118,7 +118,7 @@ void saveFlowTest(ExperimentData& data) {
                 break;
             }
         }
-        
+
         if (validInput) {
             break;
         }
@@ -133,27 +133,24 @@ void saveFlowTest(ExperimentData& data) {
     data.setFlowTestValue(average);
 }
 
-
-
-// 실험체의 압축강도 입력, 입력받은 값의 평균값 저장
-void saveCompressiveStrength(ExperimentData& data) {
+// 사용자에게 입력받은 강도(압축, 쪼갬, 휨) 저장 함수
+void saveStrength(ExperimentData& data, const string& strengthType) {
     string input;
-    double compressiveStrengthValues[3];
+    // 강도 입력 리스트
+    double strengthValues[3];
 
-    // 유효성 검사를 위한 while문 설정
+    // 유효성 검사를 위한 while문
     while (true) {
-        cout << "실험체의 압축강도를 공백으로 구분하여 KN 단위(실수)로 입력하세요 : ";
+        cout << "실험체의 " << strengthType << "를 공백으로 구분하여 KN 단위(실수)로 입력하세요 : ";
         cin.ignore();
-        // 입력 한 줄로 받기
         getline(cin, input);
 
-        // 입력 stringstream에 저장
         stringstream ss(input);
 
-        // validInput 변수를 통한 유효성 검사 실행
+        // 유효성 검사를 위한 validInput 설정
         bool validInput = true;
         for (int i = 0; i < 3; i++) {
-            if (!(ss >> compressiveStrengthValues[i])) {
+            if (!(ss >> strengthValues[i])) {
                 validInput = false;
                 cout << "유효하지 않은 입력입니다. 숫자(실수)를 공백으로 구분하여 입력하세요." << endl;
                 break;
@@ -167,93 +164,21 @@ void saveCompressiveStrength(ExperimentData& data) {
 
     double sum = 0;
     for (int i = 0; i < 3; i++) {
-        sum += compressiveStrengthValues[i];
+        sum += strengthValues[i];
     }
 
     double average = sum / 3;
-    // setCompressiveStrength() 함수 호출하여 평균값 설정
-    data.setCompressiveStrength(average);
+
+    // 강도에 따른 set 함수에 평균값 저장
+    if (strengthType == "압축강도") {
+        data.setCompressiveStrength(average);
+    } else if (strengthType == "쪼갬강도") {
+        data.setTensileStrength(average);
+    } else if (strengthType == "휨강도") {
+        data.setFlexuralStrength(average);
+    }
 }
 
-// 실험체의 쪼갬강도 입력, 입력받은 값의 평균값 저장
-void saveTensileStrength(ExperimentData& data) {
-    string input;
-    double tensileStrengthValues[3];
-
-    // 유효성 검사를 위한 while문 설정
-    while (true) {
-        cout << "실험체의 쪼갬강도를 공백으로 구분하여 KN 단위(실수)로 입력하세요 : ";
-        cin.ignore();
-        // 입력 한 줄로 받기
-        getline(cin, input);
-
-        // 입력 stringstream에 저장
-        stringstream ss(input);
-
-        // validInput 변수를 통한 유효성 검사 실행
-        bool validInput = true;
-        for (int i = 0; i < 3; i++) {
-            if (!(ss >> tensileStrengthValues[i])) {
-                validInput = false;
-                cout << "유효하지 않은 입력입니다. 숫자(실수)를 공백으로 구분하여 입력하세요." << endl;
-                break;
-            }
-        }
-
-        if (validInput) {
-            break;
-        }
-    }
-
-    double sum = 0;
-    for (int i = 0; i < 3; i++) {
-        sum += tensileStrengthValues[i];
-    }
-
-    double average = sum / 3;
-    // setTensileStrength() 함수 호출하여 평균값 설정
-    data.setTensileStrength(average);
-}
-
-// 실험체의 휨강도 입력, 입력받은 값의 평균값 저장
-void saveFlexuralStrength(ExperimentData& data) {
-    string input;
-    double flexuralStrengthValues[3];
-
-    // 유효성 검사를 위한 while문 설정
-    while (true) {
-        cout << "실험체의 휨강도를 공백으로 구분하여 KN 단위(실수)로 입력하세요 : ";
-        cin.ignore();
-        // 입력 한 줄로 받기
-        getline(cin, input);
-
-        // 입력 stringstream에 저장
-        stringstream ss(input);
-
-        // validInput 변수를 통한 유효성 검사 실행
-        bool validInput = true;
-        for (int i = 0; i < 3; i++) {
-            if (!(ss >> flexuralStrengthValues[i])) {
-                validInput = false;
-                cout << "유효하지 않은 입력입니다. 숫자(실수)를 공백으로 구분하여 입력하세요." << endl;
-                break;
-            }
-        }
-
-        if (validInput) {
-            break;
-        }
-    }
-
-    double sum = 0;
-    for (int i = 0; i < 3; i++) {
-        sum += flexuralStrengthValues[i];
-    }
-
-    double average = sum / 3;
-    // setFlexuralStrength() 함수 호출하여 평균값 설정
-    data.setFlexuralStrength(average);
-}
 
 void printExperimentData(ExperimentData& data) {
     // 컬럼명 출력
@@ -293,9 +218,10 @@ int main()
     saveFlowTest(data);
 
     // 5. 실험체의 압축강도, 쪼갬강도 입력(실험체명 당 3개 존재) 후 평균값 저장
-    saveCompressiveStrength(data);
-    saveTensileStrength(data);
-    saveFlexuralStrength(data);
+    saveStrength(data, "압축강도");
+    saveStrength(data, "쪼갬강도");
+    saveStrength(data, "휨강도");
+
 
     // 6. 플로우 테스트와 압축강도의 평균값을 통한 적합성 판별
     
