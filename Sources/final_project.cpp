@@ -169,13 +169,16 @@ void saveStrength(ExperimentData& data, const string& strengthType) {
 
     double average = sum / 3;
 
+    // 적합성 파악을 위한 평균값 변환 
+    double transformedValue = (average * 1000) / (50 * 50);
+
     // 강도에 따른 set 함수에 평균값 저장
     if (strengthType == "압축강도") {
-        data.setCompressiveStrength(average);
+        data.setCompressiveStrength(transformedValue);
     } else if (strengthType == "쪼갬강도") {
-        data.setTensileStrength(average);
+        data.setTensileStrength(transformedValue);
     } else if (strengthType == "휨강도") {
-        data.setFlexuralStrength(average);
+        data.setFlexuralStrength(transformedValue);
     }
 }
 
