@@ -15,8 +15,8 @@ private:
     double flowTestValue; // 플로우 테스트 값
     double compressiveStrength; // 압축강도
     string suitability; // 적합성 판별
-    double tensileStrength; // 쪼갬강도 강도
-    double flexuralStrength; // 휨 강도
+    double tensileStrength; // 쪼갬인장강도
+    double flexuralStrength; // 휨강도
 
 public:
     // 클래스 생성자 설정
@@ -175,14 +175,33 @@ void saveStrength(ExperimentData& data, const string& strengthType) {
     // 강도에 따른 set 함수에 평균값 저장
     if (strengthType == "압축강도") {
         data.setCompressiveStrength(transformedValue);
-    } else if (strengthType == "쪼갬강도") {
+    } else if (strengthType == "쪼갬인장강도") {
         data.setTensileStrength(transformedValue);
     } else if (strengthType == "휨강도") {
         data.setFlexuralStrength(transformedValue);
     }
 }
 
+// 강도를 통한 적합성 파악 함수
+void checkStrengthSuitability(ExperimentData& data) {
+    
+    // 설계 기준 강도 설정 (Mpa)
+    double standardCompressiveStrength = 17.89; // 기준 압축강도
+    double standardTensileStrength = 2.5;     // 기즌 쪼갬인장강도
+    double standardFlexuralStrength = 4.5;     // 기준 휨강도
 
+    // 실험 결과
+    double compressiveStrength = data.getCompressiveStrength();
+    double tensileStrength = data.getTensileStrength();
+    double flexuralStrength = data.getFlexuralStrength();
+
+    // 각각의 적합 여부 저장
+    bool isCompressiveSuitable = (compressiveStrength >= standardCompressiveStrength);
+    bool isTensileSuitable = (tensileStrength >= standardTensileStrength);
+    bool isFlexuralSuitable = (flexuralStrength >= standardFlexuralStrength);
+}
+
+// 최종 표 출력
 void printExperimentData(ExperimentData& data) {
     // 컬럼명 출력
     cout << "실험체명           바이오차 대체율  시멘트 양     물 양      잔골재 양     플로우 테스트 평균값  압축강도 평균값\n";
@@ -199,7 +218,6 @@ void printExperimentData(ExperimentData& data) {
          << data.getFineAggregate() << string(26 - to_string(data.getFineAggregate()).length(), ' ') // 잔골재 양
          << data.getFlowTestValue() << string(25 - to_string(data.getFlowTestValue()).length(), ' ') // 플로우 테스트 평균값
          << data.getCompressiveStrength() << string(20 - to_string(data.getCompressiveStrength()).length(), ' ') << '\n'; // 압축강도 평균값
-        //  << data.getSuitability() << '\n'; // 적합성 판별
 }
 
 
@@ -227,7 +245,7 @@ int main()
 
 
     // 6. 플로우 테스트와 압축강도의 평균값을 통한 적합성 판별
-    
+    checkStrengthSuitability(data);    
 
     // 7. 표를 통해 데이터들을 한 눈에 출력 
     printExperimentData(data);
