@@ -2,6 +2,7 @@
 #include <string>
 #include <iomanip> 
 #include <sstream>
+#include <fstream>
 using namespace std;
 
 // 실험데이터 클래스 설정
@@ -290,6 +291,45 @@ void printExperimentData(ExperimentData& data) {
          << left << setw(16) << (data.getFlexuralSuitability() ? "적합" : "부적합") << endl;
 }
 
+// 표를 txt파일에 저장하는 함수
+void saveExperimentDataToFile(ExperimentData& data) {
+    // 파일에 추가 모드로 열기
+    std::ofstream outputFile("experiment_data.txt", std::ios_base::app);
+
+    if (outputFile.is_open()) {
+        // 이전에 표 헤더가 파일에 쓰여졌는지 확인 후 추가하지 않음
+        if (outputFile.tellp() == 0) {
+            outputFile << left << setw(18) << "실험체명"
+                       << left << setw(33) << "바이오차 대체율(%)"
+                       << left << setw(23) << "시멘트 양(kg)"
+                       << left << setw(18) << "물 양(kg)"
+                       << left << setw(23) << "잔골재 양(kg)"
+                       << left << setw(23) << "플로우 테스트"
+                       << left << setw(17) << "압축강도"
+                       << left << setw(23) << "쪼갬인장강도"
+                       << left << setw(18) << "휨강도" << endl;
+
+            for (int i = 0; i < 130; i++) outputFile << '-';
+            outputFile << '\n';
+        }
+
+        outputFile << left << setw(17) << data.getSpecimenName()
+                   << left << setw(20) << static_cast<int>(data.getBioRate())
+                   << fixed << setprecision(2) << left << setw(15) << data.getCement()
+                   << left << setw(16) << data.getWater()
+                   << left << setw(17) << data.getFineAggregate()
+                   << left << setw(15) << data.getFlowTestSuitabilityString()
+                   << left << setw(17) << (data.getCompressiveSuitability() ? "적합" : "부적합")
+                   << left << setw(16) << (data.getTensileSuitability() ? "적합" : "부적합")
+                   << left << setw(16) << (data.getFlexuralSuitability() ? "적합" : "부적합") << endl;
+
+        outputFile.close();
+        cout << "데이터가 파일에 추가되었습니다." << endl;
+    } else {
+        cout << "파일을 열 수 없습니다." << endl;
+    }
+}
+
 
 int main() 
 {
@@ -315,8 +355,11 @@ int main()
     // 6. 플로우 테스트와 압축강도의 평균값을 통한 적합성 판별
     checkStrengthSuitability(data);    
 
-    // 7. 표를 통해 데이터들을 한 눈에 출력 
+    // 7. 표를 통해 데이터들을 출력 
     printExperimentData(data);
+
+    // 8. 표를 파일에 저장
+    saveExperimentDataToFile(data);
 
     return 0;
 }
