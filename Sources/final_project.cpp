@@ -12,7 +12,7 @@ private:
     double cement; // 시멘트
     double fineAggregate; // 잔골재
     string specimenName; // 바이오차는 시멘트를 대체, 바이오차 대체율에 따라 
-    double flowTestValue; // 플로우 테스트 값
+    bool isFlowTestSuitable; // Flow-Test 적합 여부
     double compressiveStrength; // 압축강도
     string suitability; // 적합성 판별
     double tensileStrength; // 쪼갬인장강도
@@ -53,7 +53,6 @@ public:
     }
 
     // setter : 멤버 변수 값 설정
-    void setFlowTestValue(double value) { flowTestValue = value; }
     void setCompressiveStrength(double value) { compressiveStrength = value; }
     void setTensileStrength(double value) { tensileStrength = value; }
     void setFlexuralStrength(double value) { flexuralStrength = value; }
@@ -69,7 +68,9 @@ public:
     void setBioRate(double rate) {
         bioRate = rate;
     }
-
+     void setFlowTestSuitability(bool suitable) {
+        isFlowTestSuitable = suitable;
+    }
     void setCompressiveSuitability(bool suitable) {
         isCompressiveSuitable = suitable;
     }
@@ -88,16 +89,21 @@ public:
     double getWater() { return water; }
     double getCement() { return cement; }
     double getFineAggregate() { return fineAggregate; }
-    double getFlowTestValue() { return flowTestValue; }
+    bool getFlowTestSuitability() const { return isFlowTestSuitable; }
+    string getFlowTestSuitabilityString() const {
+        if (isFlowTestSuitable) {
+            return "부적합";
+        } else {
+            return "적합";
+        }
+    }
     double getCompressiveStrength() { return compressiveStrength; }
     double getTensileStrength() { return tensileStrength; }
     double getFlexuralStrength() { return flexuralStrength; }
     string getSuitability() { return suitability; }
     string getSpecimenName() { return specimenName; }
     bool getCompressiveSuitability() const { return isCompressiveSuitable; }
-
     bool getTensileSuitability() const { return isTensileSuitable; }
-
     bool getFlexuralSuitability() const { return isFlexuralSuitable; }
 };
 
@@ -133,11 +139,11 @@ void printMaterials(ExperimentData& data) {
 }
 
 
-// 시간대 별 Flow-Test값 입력, 입력받은 값의 평균값 저장
+// 시간대 별 Flow-Test값 입력, 입력받은 값의 부적합 여부 저장
 void saveFlowTest(ExperimentData& data) {
     string input;
     double flowTestValues[5];
-    // Flow-Test 시간은 고정값, 0은 직후 Flow-test 값
+    // Flow-Test 시간은 고정값, 0은 직후 Flow-Test 값
     int times[5] = {0, 10, 20, 30, 40};
 
     // 유효성 검사를 위한 while문
@@ -166,13 +172,18 @@ void saveFlowTest(ExperimentData& data) {
         }
     }
 
-    double sum = 0;
+    bool isFlowTestSuitable = true; // 기본적으로 적합으로 설정
+
+    // 150mm 이상이면 적합으로 설정
     for (int i = 0; i < 5; i++) {
-        sum += flowTestValues[i];
+        if (flowTestValues[i] >= 150) {
+            isFlowTestSuitable = false;
+            break;
+        }
     }
 
-    double average = sum / 5;
-    data.setFlowTestValue(average);
+    // 적합 여부를 ExperimentData 클래스에 저장
+    data.setFlowTestSuitability(isFlowTestSuitable);
 }
 
 // 사용자에게 입력받은 강도(압축, 쪼갬, 휨) 저장 함수
@@ -273,7 +284,7 @@ void printExperimentData(ExperimentData& data) {
          << left << setw(18) << data.getCement()
          << left << setw(16) << data.getWater()
          << left << setw(21) << data.getFineAggregate()
-         << left << setw(14) << data.getFlowTestValue()
+         << left << setw(14) << data.getFlowTestSuitabilityString()
          << left << setw(18) << (data.getCompressiveSuitability() ? "적합" : "부적합")
          << left << setw(17) << (data.getTensileSuitability() ? "적합" : "부적합")
          << left << setw(16) << (data.getFlexuralSuitability() ? "적합" : "부적합") << endl;
