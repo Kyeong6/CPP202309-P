@@ -148,7 +148,7 @@ void saveFlowTest(ExperimentData& data) {
 
     // 유효성 검사를 위한 while문
     while (true) {
-        cout << "각 시간 별(초기값은 직후) Flow-Test 값을 공백으로 구분하여 mm 단위로 입력하세요 : ";
+        cout << "10분 간격의 시간대 별(0분 ~ 40분) Flow-Test 값을 공백으로 구분하여 mm 단위로 입력하세요 : ";
         cin.ignore();
         // 입력 한 줄로 받기
         getline(cin, input);
@@ -194,7 +194,7 @@ void saveStrength(ExperimentData& data, const string& strengthType) {
 
     // 유효성 검사를 위한 while문
     while (true) {
-        cout << "실험체의 " << strengthType << "를 공백으로 구분하여 KN 단위(실수)로 입력하세요 : ";
+        cout << "실험체의 " << strengthType << "를 공백으로 구분하여 KN 단위(실수)로 3개의 값을 입력하세요 : ";
         cin.ignore();
         getline(cin, input);
 
@@ -284,7 +284,7 @@ void printExperimentData(ExperimentData& data) {
          << left << setw(18) << data.getCement()
          << left << setw(16) << data.getWater()
          << left << setw(21) << data.getFineAggregate()
-         << left << setw(14) << data.getFlowTestSuitabilityString()
+         << left << setw(16) << data.getFlowTestSuitabilityString()
          << left << setw(18) << (data.getCompressiveSuitability() ? "적합" : "부적합")
          << left << setw(17) << (data.getTensileSuitability() ? "적합" : "부적합")
          << left << setw(16) << (data.getFlexuralSuitability() ? "적합" : "부적합") << endl;
